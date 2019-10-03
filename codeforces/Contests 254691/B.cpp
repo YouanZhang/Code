@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef pair <double, double> P;
+typedef pair <int, double> P;
 typedef pair <double, P> PP;
 priority_queue <PP, vector<PP>, greater<PP> > q;
 const int MAXN = 2e5 + 7;
@@ -20,10 +20,11 @@ int main() {
         ans += sum * sum * m / m / m;
         // for (int i = 1; i <= n; i++)
         //     ans -= 2 * a[i] * sum / n;
+        while (!q.empty()) q.pop();
         double s = 0;
         for (int i = 1; i <= n; i++) {
             s += a[i] * a[i] / 1;
-            q.push(PP(- a[i] * a[i] / 1.0 + a[i] * a[i] / 2.0, P(2, a[i] * a[i])));
+            q.push(PP(- a[i] * a[i] / 1 + a[i] * a[i] / 2, P(2, a[i] * a[i])));
         }
         for (int i = n + 1; i <= m; i++){
             PP cur = q.top(); q.pop();
@@ -38,6 +39,6 @@ int main() {
         }
         ans += s;
         ans /= m;
-        printf("Case #%d: %.12f\n", ca, ans);
+        printf("Case #%d: %.9lf\n", ca, ans);
     }
 }

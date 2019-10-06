@@ -18,4 +18,4 @@ int main() {
         q = (a + b) * (a + c) * (a + b + c);
         cout << p / __gcd(p, q) << "/" << q / __gcd(p, q) << endl;
     }
-}
+} 

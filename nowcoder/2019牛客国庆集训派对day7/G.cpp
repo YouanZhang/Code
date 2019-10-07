@@ -1,33 +1,50 @@
 #include <bits/stdc++.h>
 using namespace std;
 const int MAXN = 1e5 + 7;
-double a[MAXN], sum[MAXN], delta_2[MAXN];
+const int INF = 1e9 + 7;
+int a[MAXN], t[MAXN << 2];
+void build(int u, int l, int r) {
+    if (l == r) {
+        t[u] = a[l];
+        return;
+    }
+    int mid = (l + r) >> 1;
+    build(u << 1, l, mid);
+    build(u << 1 | 1, mid + 1, r);
+    t[u] = min(t[u << 1], t[u << 1 | 1]);
+}
+int query(int u, int l, int r, int x, int y) {
+    if (x <= l && r <= y) return t[u];
+    int mid = (l + r) >> 1;
+    int ret = INF;
+    if (x <= mid) ret = query(u << 1, l, mid, x, y);
+    if (mid + 1 <= y) ret = min(query(u << 1 | 1, mid + 1, r, x, y), ret);
+    return ret;
+}
 int main() {
-    ios::sync_with_stdio(0); cin.tie(0); cout.precision(8); cout << fixed;
-    for (int n, m; cin >> n >> m;) {
-        for (int i = 1; i <= n; i++) {
-            cin >> a[i];
-            sum[i] = a[i] + sum[i - 1];
-            // if (i - m > 0) {
-            //     delta_2[i] = (a[i - m] - a[i]) / n;
-            //     delta_2[i] = delta_2[i] * delta_2[i];
-            //     delta_2[i] += delta_2[i - 1];
-            // }
+    int n, q;
+    while (cin >> n >> q) {
+        string s;
+        cin >> s;
+        for (int i = 0; i <= n * 4; i++) t[i] = INF;
+        for (int i = 0; i < n; i++) {
+            if (s[i] == '(') a[i + 1] = 1;
+            else a[i + 1] = -1;
+            a[i + 1] += a[i];
         }
-        double ans = 0;
-        for (int i = 1; i <= m; i++)
-            ans += pow(a[i] - sum[m] / m, 2);
-        cout << sqrt(ans / (m - 1)) << endl;
-        for (int i = m + 1; i <= n; i++) {
-            // cerr << ans << endl;
-            ans -= pow(a[i - m] - (sum[i - 1] - sum[i - m - 1]) / m, 2);
-            ans += pow(a[i] - (sum[i - 1] - sum[i - m - 1]) / m, 2);
-            // cerr << ans << endl;
-            ans += m * pow((a[i - m] - a[i]) / m, 2);
-            // cerr << ans << endl;
-            ans += 2 * (a[i - m] - a[i]) / m * (a[i] - a[i - m]);
-            // cerr << ans << endl;
-            cout << sqrt(ans / (m - 1)) << endl;
+        build(1, 1, n);
+        for (int i = 1; i <= q; i++) {
+            int u, v;
+            cin >> u >> v;
+            if (s[u - 1] == s[v - 1]) cout << "Yes" << endl;
+            else{
+                if (u > v) swap(u, v);
+                if (s[u - 1] == ')') cout << "Yes" << endl;
+                else {
+                    if (query(1, 1, n, u, v - 1) < 2) cout << "No" << endl;
+                    else cout << "Yes" << endl;
+                }
+            }
         }
     }
 }

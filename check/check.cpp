@@ -1,6 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
 int main() {
+    system("g++ data.cpp -g -o data");
+    system("g++ my.cpp -g -o my");
+    system("g++ ans.cpp -g -o ans");
     while (true)
     {
         system("data.exe > in.txt");
